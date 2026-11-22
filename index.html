@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Last Escape</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg1:#f9a8d4; --bg2:#4338ca; --accent:#bae6fd; --ink:#ffffff; --deep:#2a1a5e;
+  --display:"Sora",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;min-height:100%;background:#2a1a5e;color:var(--ink);font-family:var(--body)}
+#root{min-height:100vh}
+.stage{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 16px;overflow:hidden;
+  background:linear-gradient(150deg,var(--bg1),var(--bg2));
+  transition:background .9s;
+}
+/* two big soft light blobs drifting slowly behind the glass */
+.stage::before,.stage::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.stage::before{width:62vmax;height:62vmax;left:-20vmax;top:-22vmax;background:radial-gradient(circle,var(--accent),transparent 68%);opacity:.7;animation:drift 14s infinite ease-in-out}
+.stage::after{width:55vmax;height:55vmax;right:-18vmax;bottom:-22vmax;background:radial-gradient(circle,#ffffff,transparent 65%);opacity:.35;animation:drift 18s infinite ease-in-out reverse}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(8vmax,6vmax) scale(1.12)}}
+.deco{position:absolute;inset:0;pointer-events:none}
+.deco.r0{background:radial-gradient(circle at 85% 20%,rgba(255,220,150,.45) 0 60px,transparent 62px)}
+.deco.r1{background:radial-gradient(circle at 15% 75%,rgba(165,243,252,.35) 0 90px,transparent 92px),radial-gradient(circle at 90% 85%,rgba(255,255,255,.2) 0 40px,transparent 42px)}
+.deco.r2{background:radial-gradient(circle at 80% 15%,rgba(251,207,232,.5) 0 70px,transparent 72px),radial-gradient(circle at 10% 30%,rgba(255,255,255,.25) 0 30px,transparent 32px)}
+.wrap{position:relative;width:100%;max-width:560px;z-index:1}
+.card{
+  position:relative;overflow:hidden;padding:30px 26px;border-radius:28px;
+  background:linear-gradient(135deg,rgba(255,255,255,.26),rgba(255,255,255,.08)),rgba(35,20,85,.38);
+  -webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:0 20px 60px rgba(30,10,80,.45),inset 0 1px 0 rgba(255,255,255,.6);
+  animation:float-in .8s ease both;
+}
+.card::before{content:"";position:absolute;top:-60%;left:-30%;width:70%;height:200%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);transform:rotate(12deg);pointer-events:none}
+@keyframes float-in{from{opacity:0;transform:translateY(22px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.mascot{font-size:3.2rem;text-align:center;line-height:1;margin-bottom:.2em;animation:bob 3.4s infinite ease-in-out;filter:drop-shadow(0 6px 14px rgba(255,255,255,.45))}
+h1,h2{font-family:var(--display);font-weight:700;margin:0 0 .45em;line-height:1.15;text-align:center}
+h1{font-size:clamp(2.2rem,9.5vw,3.6rem);text-shadow:0 0 28px var(--accent),0 2px 10px rgba(30,10,80,.5)}
+h2{font-size:clamp(1.5rem,6vw,2rem)}
+p{font-size:1.08rem;line-height:1.65;margin:0 0 1em}
+.intro{text-align:center;font-size:1.2rem;font-weight:500}
+.place{display:table;margin:0 auto .7em;padding:4px 16px;border-radius:999px;font-weight:500;font-size:.98rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45)}
+.story{color:rgba(255,255,255,.86);text-align:center}
+.puzzle{margin:1.2em 0;padding:18px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);text-align:center}
+.puzzle .q{font-family:var(--display);font-size:1.3rem;font-weight:500;margin:0;line-height:1.35}
+.puzzle .seq{font-family:var(--display);font-size:2.2rem;font-weight:700;letter-spacing:.08em;margin:.35em 0 0;color:var(--accent);text-shadow:0 0 18px var(--accent)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+input{
+  flex:1 1 180px;min-width:0;font:inherit;font-size:1.1rem;color:#fff;padding:13px 18px;border-radius:999px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.5);
+}
+input::placeholder{color:rgba(255,255,255,.65)}
+input:disabled{opacity:.6}
+button{
+  font:inherit;font-weight:700;font-size:1.02rem;cursor:pointer;border-radius:999px;padding:12px 24px;min-height:46px;
+  color:var(--deep);border:1px solid rgba(255,255,255,.9);background:linear-gradient(135deg,#fff,var(--accent));
+  box-shadow:0 8px 22px rgba(30,10,80,.35),0 0 18px color-mix(in srgb,var(--accent) 60%,transparent);
+  transition:transform .2s,box-shadow .2s;
+}
+button:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(30,10,80,.4),0 0 26px var(--accent)}
+button:active{transform:translateY(0)}
+button.ghost{background:rgba(255,255,255,.14);color:#fff;box-shadow:none}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.big{display:block;margin:1.3em auto 0;font-size:1.15rem;padding:14px 40px}
+.actions{margin-top:14px}
+.msg{margin:16px 0 0;padding:12px 16px;border-radius:16px;border:1px solid;animation:float-in .5s ease both}
+.msg.ok{background:rgba(110,231,160,.22);border-color:rgba(110,231,160,.8)}
+.msg.bad{background:rgba(251,113,133,.24);border-color:rgba(253,164,175,.85)}
+.msg.hint{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.5)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:500}
+.top span{padding:5px 16px;border-radius:999px;background:rgba(35,20,85,.4);border:1px solid rgba(255,255,255,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.top b{font-family:var(--display)}
+.bar{height:12px;border-radius:999px;background:rgba(35,20,85,.35);border:1px solid rgba(255,255,255,.4);overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#fff,var(--accent));box-shadow:0 0 14px var(--accent);transition:width .8s ease}
+.time{font-family:var(--display);font-size:3.6rem;font-weight:700;text-align:center;margin:.1em 0 .3em;text-shadow:0 0 26px var(--accent)}
+.center{text-align:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media (max-width:420px){.card{padding:24px 18px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script>
+const h = React.createElement;
+const { useState, useEffect } = React;
+
+// The three rooms: change the text here to make your own puzzles.
+const ROOMS = [
+  {
+    place: "The Cellar", emoji: "🕯️",
+    title: "Room 1",
+    story: "Cold stone, dripping water. A rusted lock on the far door glows faintly, and numbers are scratched into the wall beside it.",
+    question: "What number comes next?",
+    sequence: "2, 4, 8, 16, ?",
+    answer: "32",
+    hint: "Each number is multiplied by 2.",
+    theme: { "--bg1": "#ff8a80", "--bg2": "#5b2a86", "--accent": "#ffd1a6" }
+  },
+  {
+    place: "The Clock Tower", emoji: "⚙️",
+    title: "Room 2",
+    story: "You climb a spiral stair into a tower of brass gears. The air ticks around you. A voice from the dark whispers a riddle.",
+    question: "I have hands but cannot clap. What am I?",
+    sequence: "",
+    answer: "clock",
+    hint: "You can use me to know the time.",
+    theme: { "--bg1": "#4fd1c5", "--bg2": "#2b3f9b", "--accent": "#a5f3fc" }
+  },
+  {
+    place: "The Moonlit Music Hall", emoji: "🌙",
+    title: "Room 3",
+    story: "A grand hall, silent and silver with moonlight. Beyond the stage stands the exit. Its last lock waits for one final answer.",
+    question: "What has keys but cannot open locks?",
+    sequence: "",
+    answer: "piano",
+    hint: "You can play music using it.",
+    theme: { "--bg1": "#c084fc", "--bg2": "#3b1d7a", "--accent": "#fbcfe8" }
+  }
+];
+
+// Lowercase, trim, collapse spaces, and drop a leading "a", "an" or "the".
+function clean(text) {
+  return text.toLowerCase().trim().replace(/\s+/g, " ").replace(/^(a|an|the) /, "");
+}
+
+function formatTime(total) {
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function App() {
+  const [screen, setScreen] = useState("welcome"); // welcome, play, win
+  const [room, setRoom] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const [message, setMessage] = useState(null); // { type, text }
+  const [hint, setHint] = useState(false);
+  const [solved, setSolved] = useState(false);
+  const [startTime, setStartTime] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  // The timer only runs while the player is in a room.
+  useEffect(() => {
+    if (screen !== "play") return;
+    const id = setInterval(() => {
+      setSeconds(Math.floor((Date.now() - startTime) / 1000));
+    }, 500);
+    return () => clearInterval(id);
+  }, [screen, startTime]);
+
+  function startGame() {
+    setRoom(0); setAnswer(""); setMessage(null); setHint(false); setSolved(false);
+    setSeconds(0); setStartTime(Date.now());
+    setScreen("play");
+  }
+
+  function submit() {
+    if (solved) return;
+    if (clean(answer) === "") {
+      setMessage({ type: "bad", text: "The lock is waiting. Type your answer first." });
+      return;
+    }
+    if (clean(answer) === ROOMS[room].answer) {
+      setSolved(true);
+      setMessage({ type: "ok", text: room === 2
+        ? "Click! The final lock falls open. Daylight spills in."
+        : "Click! The lock opens. The next door swings wide." });
+    } else {
+      setMessage({ type: "bad", text: "Nothing happens. That isn’t it. Read the clue again, or press Hint." });
+    }
+  }
+
+  function nextRoom() {
+    if (room === 2) {
+      setSeconds(Math.floor((Date.now() - startTime) / 1000)); // freeze final time
+      setScreen("win");
+    } else {
+      setRoom(room + 1); setAnswer(""); setMessage(null); setHint(false); setSolved(false);
+    }
+  }
+
+  // ---------- Welcome ----------
+  if (screen === "welcome") {
+    return h("div", { className: "stage" },
+      h("div", { className: "deco r0" }),
+      h("div", { className: "wrap" },
+        h("div", { className: "card" },
+          h("div", { className: "mascot" }, "🔮"),
+          h("h1", null, "The Last Escape"),
+          h("p", { className: "intro" }, "You wake in the dark with no memory of how you got here. The doors are locked. Somewhere, a clock is ticking."),
+          h("p", { className: "center story" }, "Solve three riddles, open three locks, and find your way out before you lose track of time."),
+          h("button", { className: "big", onClick: startGame }, "Start Game")
+        )
+      )
+    );
+  }
+
+  // ---------- Win ----------
+  if (screen === "win") {
+    return h("div", { className: "stage" },
+      h("div", { className: "deco r2" }),
+      h("div", { className: "wrap" },
+        h("div", { className: "card center" },
+          h("div", { className: "mascot" }, "✨"),
+          h("h1", null, "You escaped!"),
+          h("p", { className: "intro" }, "Congratulations. The last door opens and the night air greets you. All three rooms are behind you."),
+          h("p", { className: "story" }, "Your escape time"),
+          h("div", { className: "time" }, formatTime(seconds)),
+          h("button", { className: "big", onClick: startGame }, "Play Again")
+        )
+      )
+    );
+  }
+
+  // ---------- Playing ----------
+  const r = ROOMS[room];
+  const progress = ((room + (solved ? 1 : 0)) / 3) * 100;
+
+  return h("div", { className: "stage", style: r.theme },
+    h("div", { className: "deco r" + room }),
+    h("div", { className: "wrap" },
+      h("div", { className: "top" },
+        h("span", null, "Room ", h("b", null, room + 1), " of 3"),
+        h("span", null, "Time ", h("b", null, formatTime(seconds)))
+      ),
+      h("div", { className: "bar", role: "progressbar", "aria-valuemin": 0, "aria-valuemax": 3, "aria-valuenow": room + (solved ? 1 : 0) },
+        h("i", { style: { width: progress + "%" } })
+      ),
+      h("div", { className: "card", key: room },
+        h("div", { className: "mascot" }, r.emoji),
+        h("p", { className: "place" }, r.place),
+        h("h2", null, r.title),
+        h("p", { className: "story" }, r.story),
+        h("div", { className: "puzzle" },
+          h("p", { className: "q" }, r.question),
+          r.sequence ? h("p", { className: "seq" }, r.sequence) : null
+        ),
+        h("div", { className: "row" },
+          h("input", {
+            type: "text", value: answer, disabled: solved, placeholder: "Your answer",
+            "aria-label": "Your answer", autoComplete: "off",
+            onChange: (e) => setAnswer(e.target.value),
+            onKeyDown: (e) => { if (e.key === "Enter") submit(); }
+          }),
+          h("button", { onClick: submit, disabled: solved }, "Submit")
+        ),
+        h("div", { className: "row actions" },
+          h("button", { className: "ghost", onClick: () => setHint(true) }, "Hint"),
+          solved ? h("button", { onClick: nextRoom }, room === 2 ? "Open the final door" : "Go to next room") : null
+        ),
+        hint ? h("div", { className: "msg hint" }, "Hint: " + r.hint) : null,
+        message ? h("div", { className: "msg " + message.type, role: "status" }, message.text) : null
+      )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(h(App));
+</script>
+</body>
+</html>
